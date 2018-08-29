@@ -1,9 +1,11 @@
 package com.example.per2.uselessmachine;
 
+import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -26,7 +28,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setListeners() {
         //TODO self destruct button
-
+        buttonSelfDestruct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startSelfDestructSequence();
+            }
+        });
         switchUseless.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean checked) {
@@ -40,6 +47,39 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void startSelfDestructSequence() {
+        //Disable the button
+        buttonSelfDestruct.setEnabled(false);
+        //Start a 10 second countdown timer that updates display every second
+        startSwitchSelfDestructTimer();
+        //Want the button to show the countdown
+        //At the end, we're going to close the activity
+        //call the finish() method
+
+    }
+
+    private void startSwitchSelfDestructTimer() {
+        new CountDownTimer(10000, 1000) {
+            private int countDown= 10;
+            @Override
+            public void onTick(long millisUntilFinished) {
+                String countDownString = ""+countDown;
+                buttonSelfDestruct.setText(countDownString);
+                if (countDown <= 3) {
+                    buttonSelfDestruct.setBackgroundColor(Color.argb(255,255,0,0));
+                    buttonSelfDestruct.setTextColor(Color.argb(255,0,255,0));
+                }
+
+                countDown--;
+            }
+
+            @Override
+            public void onFinish() {
+                finish();
+            }
+        }.start();
     }
 
     private void startSwitchOffTimer() {
